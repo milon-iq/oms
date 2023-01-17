@@ -31,3 +31,27 @@ class CategoryCreateSerializer(ModelSerializer):
     class Meta:
         model = Category
         exclude = ['created_at', 'updated_at']
+
+
+class ProductListSerializer(ModelSerializer):
+    class Meta:
+        model = Product
+        exclude = ['created_at', 'updated_at']
+
+
+class ProductCreateSerializer(ModelSerializer):
+    class Meta:
+        model = Product
+        exclude = ['created_at', 'updated_at']
+
+
+class CartDetailSerializer(ModelSerializer):
+    class Meta:
+        model = Cart
+        exclude = ['created_at', 'updated_at']
+
+
+class CartListSerializer(ModelSerializer):
+    class Meta:
+        model = Cart
+        exclude = ['created_at', 'updated_at']
