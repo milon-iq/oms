@@ -13,3 +13,21 @@ class BrandListSerializer(ModelSerializer):
     class Meta:
         model = Brand
         exclude = ["created_at", "updated_at"]
+
+
+class CategoryListSerializer(ModelSerializer):
+    class Meta:
+        model = Category
+        exclude = ['created_at', 'updated_at']
+
+
+class CategoryRetrieveSerializer(ModelSerializer):
+    class Meta:
+        model = Category
+        exclude = ['created_at', 'updated_at']
+
+
+class CategoryCreateSerializer(ModelSerializer):
+    class Meta:
+        model = Category
+        exclude = ['created_at', 'updated_at']
