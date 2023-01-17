@@ -2,7 +2,8 @@ from django.shortcuts import render
 from django.http.response import HttpResponse
 from .models import Brand, Category, Product, Cart, Coupon, Order
 from .serializers import BrandCreateSerializer, BrandListSerializer, CategoryListSerializer, CategoryRetrieveSerializer, \
-    CategoryCreateSerializer, ProductCreateSerializer, ProductListSerializer, CartDetailSerializer, CartListSerializer
+    CategoryCreateSerializer, ProductCreateSerializer, ProductListSerializer, CartDetailSerializer, CartListSerializer, \
+    OrderDetailSerializer, OrderListSerializer
 from rest_framework.generics import CreateAPIView, ListAPIView, UpdateAPIView, RetrieveAPIView
 from rest_framework.response import Response
 from rest_framework import status
@@ -188,7 +189,7 @@ class CartRetrieveAPIView(RetrieveAPIView):
     queryset = Cart.objects.all()
 
     def get(self, request, *args, **kwargs):
-        pk=kwargs.get('pk', None)
+        pk = kwargs.get('pk', None)
         cart_obj = Cart.objects.filter(pk=pk).first()
         serializer = CartDetailSerializer(cart_obj)
         return Response(data=serializer.data, status=status.HTTP_200_OK)
@@ -200,6 +201,57 @@ class CartUpdateAPIView(UpdateAPIView):
 
     def put(self, request, *args, **kwargs):
         data = request.data
-        pk=kwargs.get('pk', None)
+        pk = kwargs.get('pk', None)
         cart_qs = Cart.objects.filter(pk=pk).update(**data)
         return Response(data={'details': 'Cart details updated'}, status=status.HTTP_200_OK)
+
+
+class OrderListAPIView(ListAPIView):
+    serializer_class = OrderListSerializer
+    queryset = Order.objects.all()
+
+    def get(self, request, *args, **kwargs):
+        queryset = Order.objects.all()
+        serializer = OrderListSerializer(queryset, many=True)
+        return Response(data=serializer.data, status=status.HTTP_200_OK)
+
+
+class OrderRetrieveAPIView(RetrieveAPIView):
+    serializer_class = OrderDetailSerializer
+    queryset = Order.objects.all()
+
+    def get(self, request, *args, **kwargs):
+        pk = kwargs.get('pk', None)
+        order_obj = Order.objects.filter(pk=pk).first()
+        if order_obj is None:
+            return Response(data={'details': 'No Order found regarding this ID. '}, status=status.HTTP_404_NOT_FOUND)
+        serializer = OrderDetailSerializer(order_obj)
+        return Response(data=serializer.data, status=status.HTTP_200_OK)
+
+
+class OrderCreateAPIView(CreateAPIView):
+    serializer_class = OrderDetailSerializer
+    queryset = Order.objects.all()
+
+    def post(self, request, *args, **kwargs):
+        data = request.data
+        user_id = data.get('user_id', None)
+        quantity = data.get('quantity', None)
+        unit_price = data.get('unit_price', None)
+        total_price = data.get('total_price', None)
+
+        order_obj = Order(user_id_id=user_id, quantity=quantity, unit_price=unit_price,
+                          total_price=total_price)
+        order_obj.save()
+        serializer = OrderDetailSerializer(order_obj)
+        return Response(data=serializer.data, status=status.HTTP_201_CREATED)
+
+
+class OrderUpdateAPIView(UpdateAPIView):
+    serializer_class = OrderDetailSerializer
+    queryset = Order.objects.all()
+
+    def put(self, request, *args, **kwargs):
+        pk = kwargs.get('pk', None)
+        order_qs = Order.objects.filter(pk=pk).update(**request.data)
+        return Response(data={'details': 'Order details updated'}, status=status.HTTP_200_OK)

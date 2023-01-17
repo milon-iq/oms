@@ -56,7 +56,7 @@ class Coupon(BaseModel):
 
 class Order(BaseModel):
     user_id = models.ForeignKey(User, on_delete=models.CASCADE, help_text=' user id')
-    product_quantity = models.IntegerField(help_text='amount of products want to order')
+    quantity = models.IntegerField(help_text='amount of products want to order')
     unit_price = models.DecimalField(max_digits=10, decimal_places=2, help_text='product prices')
     total_price = models.DecimalField(max_digits=10, decimal_places=2, help_text='total prices of products')
 

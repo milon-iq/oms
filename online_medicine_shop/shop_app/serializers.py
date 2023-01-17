@@ -55,3 +55,15 @@ class CartListSerializer(ModelSerializer):
     class Meta:
         model = Cart
         exclude = ['created_at', 'updated_at']
+
+
+class OrderDetailSerializer(ModelSerializer):
+    class Meta:
+        model = Order
+        exclude = ['created_at', 'updated_at']
+
+
+class OrderListSerializer(ModelSerializer):
+    class Meta:
+        model = Order
+        exclude = ['created_at', 'updated_at']

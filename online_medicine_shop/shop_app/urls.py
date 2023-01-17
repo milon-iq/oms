@@ -4,7 +4,7 @@ from . import views
 from .views import BrandCreateAPIView, BrandRetrieveAPIView, BrandListAPIView, BrandUpdateAPIView, CategoryListAPIView, \
     CategoryRetrieveAPIView, CategoryCreateAPIView, CategoryUpdateAPIView, ProductListAPIView, ProductCreateAPIView, \
     ProductRetrieveAPIView, ProductUpdateAPIView, CartListAPIView, CartCreateAPIView, CartRetrieveAPIView, \
-    CartUpdateAPIView
+    CartUpdateAPIView, OrderListAPIView, OrderRetrieveAPIView, OrderCreateAPIView, OrderUpdateAPIView
 urlpatterns = [
     path('brand/create/', BrandCreateAPIView.as_view(), name='brand_create'),
     path('brand/detail/<int:pk>/', BrandRetrieveAPIView.as_view(), name='brand_details'),
@@ -25,5 +25,10 @@ urlpatterns = [
     path('cart/create/', CartCreateAPIView.as_view(), name='cart_create'),
     path('cart/detail/<int:pk>/', CartRetrieveAPIView.as_view(), name='cart_detail'),
     path('cart/update/<int:pk>/', CartUpdateAPIView.as_view(), name='update_cart'),
+
+    path('order/list/all/', OrderListAPIView.as_view(), name='order_list'),
+    path('order/detail/<int:pk>/', OrderRetrieveAPIView.as_view(), name='order_detail'),
+    path('order/create/', OrderCreateAPIView.as_view(), name='order_create'),
+    path('order/update/<int:pk>/', OrderUpdateAPIView.as_view(), name='order_update'),
 
 ]
