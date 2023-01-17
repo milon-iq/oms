@@ -1,5 +1,6 @@
 from django.db import models
 from systems.models import BaseModel
+from systems.enums import DiscountType
 from django.contrib.auth.models import User
 
 
@@ -45,7 +46,8 @@ class Cart(BaseModel):
 class Coupon(BaseModel):
     coupon_code = models.CharField(max_length=50, help_text='coupon code')
     discount_amount = models.DecimalField(max_digits=10, decimal_places=2, help_text='discount amount of a product')
-    coupon_start_date = models.DateTimeField(auto_now_add=True)
+    discount_type = models.CharField(max_length=10, choices=DiscountType.choices(), default=DiscountType.AMOUNT.value)
+    coupon_start_date = models.DateTimeField(auto_now_add=False)
     coupon_end_date = models.DateTimeField(auto_now_add=False)
 
     class Meta:
