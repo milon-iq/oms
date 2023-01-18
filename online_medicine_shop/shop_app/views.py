@@ -9,7 +9,7 @@ from .serializers import BrandCreateSerializer, BrandListSerializer, CategoryLis
 from rest_framework.generics import CreateAPIView, ListAPIView, UpdateAPIView, RetrieveAPIView
 from rest_framework.response import Response
 from rest_framework import status
-
+from drf_yasg.utils import swagger_auto_schema
 
 # Create your views here.
 
@@ -18,6 +18,7 @@ class BrandCreateAPIView(CreateAPIView):
     serializer_class = BrandCreateSerializer
     queryset = Brand.objects.all()
 
+    @swagger_auto_schema(tags=['Brand'])
     def post(self, request, *args, **kwargs):
         data = request.data
         brand_title = data.get('brand_title', None)
@@ -32,6 +33,7 @@ class BrandRetrieveAPIView(RetrieveAPIView):
     serializer_class = BrandListSerializer
     queryset = Brand.objects.all()
 
+    @swagger_auto_schema(tags=['Brand'])
     def get(self, request, *args, **kwargs):
         pk = kwargs.get('pk', None)
         brand_obj = Brand.objects.filter(pk=pk).first()
@@ -43,6 +45,7 @@ class BrandListAPIView(ListAPIView):
     serializer_class = BrandListSerializer
     queryset = Brand.objects.all()
 
+    @swagger_auto_schema(tags=['Brand'])
     def get(self, request, *args, **kwargs):
         queryset = Brand.objects.all()
         serializer = BrandListSerializer(queryset, many=True)
@@ -53,9 +56,12 @@ class BrandUpdateAPIView(UpdateAPIView):
     serializer_class = BrandListSerializer
     queryset = Brand.objects.all()
 
+    @swagger_auto_schema(tags=['Brand'])
     def put(self, request, *args, **kwargs):
         pk = kwargs.get('pk', None)
-        brand_queryset = Brand.objects.filter(pk=pk).update(**request.data)
+        # brand_queryset = Brand.objects.filter(pk=pk).update(**request.data)
+        brand_queryset = Brand.objects.filter(pk=pk)
+        brand_obj = brand_queryset.update(**request.data)
         return Response(data={'details': 'Brand name updated'})
 
 
@@ -63,6 +69,7 @@ class CategoryListAPIView(ListAPIView):
     serializer_class = CategoryListSerializer
     queryset = Category.objects.all()
 
+    @swagger_auto_schema(tags=['Category'])
     def get(self, request, *args, **kwargs):
         queryset = Category.objects.all()
         serializer = CategoryListSerializer(queryset, many=True)
@@ -73,6 +80,7 @@ class CategoryRetrieveAPIView(RetrieveAPIView):
     serializer_class = CategoryDetailSerializer
     queryset = Category.objects.all()
 
+    @swagger_auto_schema(tags=['Category'])
     def get(self, request, *args, **kwargs):
         pk = kwargs.get('pk', None)
         category_obj = Category.objects.filter(pk=pk).first()
@@ -84,6 +92,7 @@ class CategoryCreateAPIView(CreateAPIView):
     serializer_class = CategoryCreateSerializer
     queryset = Category.objects.all()
 
+    @swagger_auto_schema(tags=['Category'])
     def post(self, request, *args, **kwargs):
         category_title = request.data.get('category_title', None)
         category_obj = Category(category_title=category_title)
@@ -97,6 +106,7 @@ class CategoryUpdateAPIView(UpdateAPIView):
     serializer_class = CategoryDetailSerializer
     queryset = Category.objects.all()
 
+    @swagger_auto_schema(tags=['Category'])
     def put(self, request, *args, **kwargs):
         pk = kwargs.get('pk', None)
         category_qs = Category.objects.filter(pk=pk).update(**request.data)
@@ -107,6 +117,7 @@ class ProductListAPIView(ListAPIView):
     serializer_class = ProductListSerializer
     queryset = Product.objects.all()
 
+    @swagger_auto_schema(tags=['Product'])
     def get(self, request, *args, **kwargs):
         queryset = Product.objects.all()
         serializer = ProductListSerializer(queryset, many=True)
@@ -117,6 +128,7 @@ class ProductCreateAPIView(CreateAPIView):
     serializer_class = ProductCreateSerializer
     queryset = Product.objects.all()
 
+    @swagger_auto_schema(tags=['Product'])
     def post(self, request, *args, **kwargs):
         data = request.data
         product_code = data.get('product_code', None)
@@ -142,6 +154,7 @@ class ProductRetrieveAPIView(RetrieveAPIView):
     serializer_class = ProductDetailSerializer
     queryset = Product.objects.all()
 
+    @swagger_auto_schema(tags=['Product'])
     def get(self, request, *args, **kwargs):
         pk = kwargs.get('pk', None)
         product_obj = Product.objects.filter(pk=pk).first()
@@ -153,6 +166,7 @@ class ProductUpdateAPIView(UpdateAPIView):
     serializer_class = ProductListSerializer
     queryset = Product.objects.all()
 
+    @swagger_auto_schema(tags=['Product'])
     def put(self, request, *args, **kwargs):
         pk = kwargs.get('pk', None)
         product_qs = Product.objects.filter(pk=pk).update(**request.data)
@@ -165,6 +179,7 @@ class CartListAPIView(ListAPIView):
     serializer_class = CartListSerializer
     queryset = Cart.objects.all()
 
+    @swagger_auto_schema(tags=['Cart'])
     def get(self, request, *args, **kwargs):
         queryset = Cart.objects.all()
         serializer = CartListSerializer(queryset, many=True)
@@ -175,8 +190,8 @@ class CartCreateAPIView(CreateAPIView):
     serializer_class = CartDetailSerializer
     queryset = Cart.objects.all()
 
+    @swagger_auto_schema(tags=['Cart'])
     def post(self, request, *ags, **kwargs):
-        product_list = []
         data = request.data
         user = User.objects.first()
         for item in data:
@@ -192,6 +207,7 @@ class CartCreateAPIView(CreateAPIView):
 #     serializer_class = CartDetailSerializer
 #     queryset = Cart.objects.all()
 #
+    # @swagger_auto_schema(tags=['Cart'])
 #     def post(self, request, *ags, **kwargs):
 #         data = request.data
 #         user = User.objects.first()
@@ -210,6 +226,7 @@ class CartRetrieveAPIView(RetrieveAPIView):
     serializer_class = CartDetailSerializer
     queryset = Cart.objects.all()
 
+    @swagger_auto_schema(tags=['Cart'])
     def get(self, request, *args, **kwargs):
         pk = kwargs.get('pk', None)
         cart_obj = Cart.objects.filter(pk=pk).first()
@@ -221,6 +238,7 @@ class CartUpdateAPIView(UpdateAPIView):
     serializer_class = CartDetailSerializer
     queryset = Cart.objects.all()
 
+    @swagger_auto_schema(tags=['Cart'])
     def put(self, request, *args, **kwargs):
         data = request.data
         pk = kwargs.get('pk', None)
@@ -232,6 +250,7 @@ class OrderListAPIView(ListAPIView):
     serializer_class = OrderListSerializer
     queryset = Order.objects.all()
 
+    @swagger_auto_schema(tags=['Order'])
     def get(self, request, *args, **kwargs):
         queryset = Order.objects.all()
         serializer = OrderListSerializer(queryset, many=True)
@@ -242,6 +261,7 @@ class OrderRetrieveAPIView(RetrieveAPIView):
     serializer_class = OrderDetailSerializer
     queryset = Order.objects.all()
 
+    @swagger_auto_schema(tags=['Order'])
     def get(self, request, *args, **kwargs):
         pk = kwargs.get('pk', None)
         order_obj = Order.objects.filter(pk=pk).first()
@@ -255,6 +275,7 @@ class OrderCreateAPIView(CreateAPIView):
     serializer_class = OrderDetailSerializer
     queryset = Order.objects.all()
 
+    @swagger_auto_schema(tags=['Order'])
     def post(self, request, *args, **kwargs):
         data = request.data
         user_id = data.get('user_id', None)
@@ -273,6 +294,7 @@ class OrderUpdateAPIView(UpdateAPIView):
     serializer_class = OrderDetailSerializer
     queryset = Order.objects.all()
 
+    @swagger_auto_schema(tags=['Order'])
     def put(self, request, *args, **kwargs):
         pk = kwargs.get('pk', None)
         order_qs = Order.objects.filter(pk=pk).update(**request.data)
@@ -283,6 +305,7 @@ class CouponListAPIView(ListAPIView):
     serializer_class = CouponListSerializer
     queryset = Coupon.objects.all()
 
+    @swagger_auto_schema(tags=['Coupon'])
     def get(self, request, *args, **kwargs):
         queryset = Coupon.objects.all()
         serializer = CouponListSerializer(queryset, many=True)
@@ -293,6 +316,7 @@ class CouponRetrieveAPIView(RetrieveAPIView):
     serializer_class = CouponDetailSerializer
     queryset = Coupon.objects.all()
 
+    @swagger_auto_schema(tags=['Coupon'])
     def get(self, request, *args, **kwargs):
         pk = kwargs.get('pk', None)
         coupon_obj = Coupon.objects.filter(pk=pk).first()
@@ -304,6 +328,7 @@ class CouponCreateAPIView(CreateAPIView):
     serializer_class = CouponDetailSerializer
     queryset = Coupon.objects.all()
 
+    @swagger_auto_schema(tags=['Coupon'])
     def post(self, request, *args, **kwargs):
         data = request.data
         coupon_code = data.get('coupon_code', None)
@@ -323,6 +348,7 @@ class CouponUpdateAPIView(UpdateAPIView):
     serializer_class = CouponDetailSerializer
     queryset = Coupon.objects.all()
 
+    @swagger_auto_schema(tags=['Coupon'])
     def put(self, request, *args, **kwargs):
         pk = kwargs.get('pk', None)
         coupon_qs = Coupon.objects.filter(pk=pk).update(**request.data)

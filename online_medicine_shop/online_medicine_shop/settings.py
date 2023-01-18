@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     'shop_app',
     'systems',
     'rest_framework',
+    'drf_yasg',
 
 
 ]
