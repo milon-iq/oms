@@ -1,9 +1,11 @@
 from django.shortcuts import render
 from django.http.response import HttpResponse
+from django.contrib.auth.models import User
 from .models import Brand, Category, Product, Cart, Coupon, Order
-from .serializers import BrandCreateSerializer, BrandListSerializer, CategoryListSerializer, CategoryRetrieveSerializer, \
-    CategoryCreateSerializer, ProductCreateSerializer, ProductListSerializer, CartDetailSerializer, CartListSerializer, \
-    OrderDetailSerializer, OrderListSerializer
+from .serializers import BrandCreateSerializer, BrandListSerializer, CategoryListSerializer, CategoryDetailSerializer, \
+    CategoryCreateSerializer, ProductCreateSerializer, ProductListSerializer,ProductDetailSerializer, \
+    CartDetailSerializer, CartListSerializer, OrderDetailSerializer, OrderListSerializer, CouponListSerializer, \
+    CouponDetailSerializer
 from rest_framework.generics import CreateAPIView, ListAPIView, UpdateAPIView, RetrieveAPIView
 from rest_framework.response import Response
 from rest_framework import status
@@ -68,13 +70,13 @@ class CategoryListAPIView(ListAPIView):
 
 
 class CategoryRetrieveAPIView(RetrieveAPIView):
-    serializer_class = CategoryRetrieveSerializer
+    serializer_class = CategoryDetailSerializer
     queryset = Category.objects.all()
 
     def get(self, request, *args, **kwargs):
         pk = kwargs.get('pk', None)
         category_obj = Category.objects.filter(pk=pk).first()
-        serializer = CategoryRetrieveSerializer(category_obj)
+        serializer = CategoryDetailSerializer(category_obj)
         return Response(data=serializer.data, status=status.HTTP_200_OK)
 
 
@@ -86,13 +88,13 @@ class CategoryCreateAPIView(CreateAPIView):
         category_title = request.data.get('category_title', None)
         category_obj = Category(category_title=category_title)
         category_obj.save()
-        serializer = CategoryRetrieveSerializer(category_obj)
+        serializer = CategoryDetailSerializer(category_obj)
         # return Response(data={'details': 'New Category Added'}, status=status.HTTP_201_CREATED)
         return Response(data=serializer.data, status=status.HTTP_201_CREATED)
 
 
 class CategoryUpdateAPIView(UpdateAPIView):
-    serializer_class = CategoryRetrieveSerializer
+    serializer_class = CategoryDetailSerializer
     queryset = Category.objects.all()
 
     def put(self, request, *args, **kwargs):
@@ -132,18 +134,18 @@ class ProductCreateAPIView(CreateAPIView):
                               product_price=product_price, stock_in=stock_in, stock_out=stock_out,
                               product_availability=product_availability, product_description=product_description)
         product_obj.save()
-        serializer = ProductListSerializer(product_obj)
+        serializer = ProductDetailSerializer(product_obj)
         return Response(data=serializer.data, status=status.HTTP_201_CREATED)
 
 
 class ProductRetrieveAPIView(RetrieveAPIView):
-    serializer_class = ProductListSerializer
+    serializer_class = ProductDetailSerializer
     queryset = Product.objects.all()
 
     def get(self, request, *args, **kwargs):
         pk = kwargs.get('pk', None)
         product_obj = Product.objects.filter(pk=pk).first()
-        serializer = ProductListSerializer(product_obj)
+        serializer = ProductDetailSerializer(product_obj)
         return Response(data=serializer.data, status=status.HTTP_200_OK)
 
 
@@ -174,14 +176,34 @@ class CartCreateAPIView(CreateAPIView):
     queryset = Cart.objects.all()
 
     def post(self, request, *ags, **kwargs):
+        product_list = []
         data = request.data
-        user_id = data.get('user_id', None)
-        product_id = data.get('product_id', None)
-        product_quantity = data.get('product_quantity', None)
-        cart_obj = Cart(user_id_id=user_id, product_id_id=product_id, product_quantity=product_quantity)
-        cart_obj.save()
-        serializer = CartDetailSerializer(cart_obj)
-        return Response(data=serializer.data, status=status.HTTP_201_CREATED)
+        user = User.objects.first()
+        for item in data:
+            product_id = item['product']
+            quantity = item['product_quantity']
+            cart_obj = Cart(user=user, product_id=product_id, product_quantity=quantity)
+            cart_obj.save()
+
+        return Response(data={'data': 'Products added to cart. '}, status=status.HTTP_201_CREATED)
+
+#
+# class CartCreateAPIView(CreateAPIView):
+#     serializer_class = CartDetailSerializer
+#     queryset = Cart.objects.all()
+#
+#     def post(self, request, *ags, **kwargs):
+#         data = request.data
+#         user = User.objects.first()
+#         product = data.get('product', None)
+#         product_quantity = data.get('product_quantity', None)
+#         # product_queryset = Product.objects.filter(id=product)
+#         # product_obj = product_queryset.first()
+#         # unit_price = product_obj.product_price
+#         cart_obj = Cart(user=user, product_id=product, product_quantity=product_quantity)
+#         cart_obj.save()
+#         serializer = CartDetailSerializer(cart_obj)
+#         return Response(data=serializer.data, status=status.HTTP_201_CREATED)
 
 
 class CartRetrieveAPIView(RetrieveAPIView):
@@ -255,3 +277,53 @@ class OrderUpdateAPIView(UpdateAPIView):
         pk = kwargs.get('pk', None)
         order_qs = Order.objects.filter(pk=pk).update(**request.data)
         return Response(data={'details': 'Order details updated'}, status=status.HTTP_200_OK)
+
+
+class CouponListAPIView(ListAPIView):
+    serializer_class = CouponListSerializer
+    queryset = Coupon.objects.all()
+
+    def get(self, request, *args, **kwargs):
+        queryset = Coupon.objects.all()
+        serializer = CouponListSerializer(queryset, many=True)
+        return Response(data=serializer.data, status=status.HTTP_200_OK)
+
+
+class CouponRetrieveAPIView(RetrieveAPIView):
+    serializer_class = CouponDetailSerializer
+    queryset = Coupon.objects.all()
+
+    def get(self, request, *args, **kwargs):
+        pk = kwargs.get('pk', None)
+        coupon_obj = Coupon.objects.filter(pk=pk).first()
+        serializer = CouponDetailSerializer(coupon_obj)
+        return Response(data=serializer.data, status=status.HTTP_200_OK)
+
+
+class CouponCreateAPIView(CreateAPIView):
+    serializer_class = CouponDetailSerializer
+    queryset = Coupon.objects.all()
+
+    def post(self, request, *args, **kwargs):
+        data = request.data
+        coupon_code = data.get('coupon_code', None)
+        discount_amount = data.get('discount_amount', None)
+        discount_type = data.get('discount_type', None)
+        coupon_start_date = data.get('coupon_start_date', None)
+        coupon_end_date = data.get('coupon_end_date', None)
+
+        coupon_obj = Coupon(coupon_code=coupon_code, discount_amount=discount_amount, discount_type=discount_type,
+                            coupon_start_date=coupon_start_date, coupon_end_date=coupon_end_date)
+        coupon_obj.save()
+        serializer = CouponDetailSerializer(coupon_obj)
+        return Response(data=serializer.data, status=status.HTTP_201_CREATED)
+
+
+class CouponUpdateAPIView(UpdateAPIView):
+    serializer_class = CouponDetailSerializer
+    queryset = Coupon.objects.all()
+
+    def put(self, request, *args, **kwargs):
+        pk = kwargs.get('pk', None)
+        coupon_qs = Coupon.objects.filter(pk=pk).update(**request.data)
+        return Response(data={'details': 'Coupon details updated'}, status=status.HTTP_200_OK)

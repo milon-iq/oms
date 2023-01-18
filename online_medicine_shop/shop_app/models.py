@@ -35,8 +35,8 @@ class Product(BaseModel):
 
 
 class Cart(BaseModel):
-    user_id = models.ForeignKey(User, models.CASCADE)
-    product_id = models.ForeignKey(Product, on_delete=models.CASCADE, help_text='product id')
+    user = models.ForeignKey(User, models.CASCADE)
+    product = models.ForeignKey(Product, on_delete=models.CASCADE, help_text='product id')
     product_quantity = models.IntegerField(help_text='amount of product want to buy')
 
     class Meta:
@@ -55,7 +55,7 @@ class Coupon(BaseModel):
 
 
 class Order(BaseModel):
-    user_id = models.ForeignKey(User, on_delete=models.CASCADE, help_text=' user id')
+    user = models.ForeignKey(User, on_delete=models.CASCADE, help_text=' user id')
     quantity = models.IntegerField(help_text='amount of products want to order')
     unit_price = models.DecimalField(max_digits=10, decimal_places=2, help_text='product prices')
     total_price = models.DecimalField(max_digits=10, decimal_places=2, help_text='total prices of products')

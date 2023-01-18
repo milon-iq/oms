@@ -4,7 +4,8 @@ from . import views
 from .views import BrandCreateAPIView, BrandRetrieveAPIView, BrandListAPIView, BrandUpdateAPIView, CategoryListAPIView, \
     CategoryRetrieveAPIView, CategoryCreateAPIView, CategoryUpdateAPIView, ProductListAPIView, ProductCreateAPIView, \
     ProductRetrieveAPIView, ProductUpdateAPIView, CartListAPIView, CartCreateAPIView, CartRetrieveAPIView, \
-    CartUpdateAPIView, OrderListAPIView, OrderRetrieveAPIView, OrderCreateAPIView, OrderUpdateAPIView
+    CartUpdateAPIView, OrderListAPIView, OrderRetrieveAPIView, OrderCreateAPIView, OrderUpdateAPIView, CouponListAPIView, \
+    CouponRetrieveAPIView, CouponCreateAPIView, CouponUpdateAPIView
 urlpatterns = [
     path('brand/create/', BrandCreateAPIView.as_view(), name='brand_create'),
     path('brand/detail/<int:pk>/', BrandRetrieveAPIView.as_view(), name='brand_details'),
@@ -30,5 +31,11 @@ urlpatterns = [
     path('order/detail/<int:pk>/', OrderRetrieveAPIView.as_view(), name='order_detail'),
     path('order/create/', OrderCreateAPIView.as_view(), name='order_create'),
     path('order/update/<int:pk>/', OrderUpdateAPIView.as_view(), name='order_update'),
+
+    path('coupon/list/all/', CouponListAPIView.as_view(), name='coupon_list'),
+    path('coupon/detail/<int:pk>/', CouponRetrieveAPIView.as_view(), name='coupon_details'),
+    path('coupon/create/', CouponCreateAPIView.as_view(), name='coupon_create'),
+    path('coupon/update/<int:pk>/', CouponUpdateAPIView.as_view(), name='coupon_update'),
+
 
 ]
