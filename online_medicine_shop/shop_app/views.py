@@ -3,11 +3,11 @@ import json
 from django.shortcuts import render
 from django.http.response import HttpResponse
 from django.contrib.auth.models import User
-from .models import Brand, Category, Product, Cart, Coupon, Order
+from .models import Brand, Category, Product, Cart, Coupon, Order, Address
 from .serializers import BrandCreateSerializer, BrandListSerializer, CategoryListSerializer, CategoryDetailSerializer, \
     CategoryCreateSerializer, ProductCreateSerializer, ProductListSerializer, ProductDetailSerializer, \
     CartDetailSerializer, CartListSerializer, OrderDetailSerializer, OrderListSerializer, CouponListSerializer, \
-    CouponDetailSerializer
+    CouponDetailSerializer, AddressCreateSerializer, AddressListSerializer, AddressRetrieveSerializer
 from rest_framework.generics import CreateAPIView, ListAPIView, UpdateAPIView, RetrieveAPIView
 from rest_framework.response import Response
 from rest_framework import status
@@ -398,3 +398,62 @@ class CouponUpdateAPIView(UpdateAPIView):
         pk = kwargs.get('pk', None)
         coupon_qs = Coupon.objects.filter(pk=pk).update(**request.data)
         return Response(data={'details': 'Coupon details updated'}, status=status.HTTP_200_OK)
+
+
+class AddressListAPIView(ListAPIView):
+    serializer_class = AddressListSerializer
+    queryset = Address.objects.all()
+    permission_classes = [AllowAny, ]
+
+    @swagger_auto_schema(tags=['Address'])
+    def get(self, request, *args, **kwargs):
+        queryset = Address.objects.all()
+        serializer = AddressListSerializer(queryset, many=True)
+        return Response(data=serializer.data, status=status.HTTP_200_OK)
+
+
+class AddressRetrieveAPIView(RetrieveAPIView):
+    serializer_class = AddressRetrieveSerializer
+    queryset = Address.objects.all()
+    permission_classes = [AllowAny, ]
+
+    @swagger_auto_schema(tags=['Address'])
+    def get(self, request, *args, **kwargs):
+        pk = kwargs.get('pk', None)
+        address_obj = Address.objects.filter(pk=pk).first()
+        serializer = AddressRetrieveSerializer(address_obj)
+        return Response(data=serializer.data, status=status.HTTP_200_OK)
+
+
+class AddressCreateAPIView(CreateAPIView):
+    serializer_class = AddressCreateSerializer
+    queryset = Address.objects.all()
+    permission_classes = [AllowAny, ]
+
+    @swagger_auto_schema(tags=['Address'])
+    def post(self, request, *args, **kwargs):
+        data = request.data
+        address = data.get('address', None)
+        upazila = data.get('upazila', None)
+        district = data.get('district', None)
+        division = data.get('division', None)
+        contact_no = data.get('contact_no', None)
+        address_type = data.get('address_type', None)
+
+        address_obj = Address(address=address, upazila=upazila, district=district, division=division,
+                              contact_no=contact_no, address_type=address_type)
+        address_obj.save()
+        serializer = AddressCreateSerializer(address_obj)
+        return Response(serializer.data, status=status.HTTP_201_CREATED)
+
+
+class AddressUpdateAPIView(UpdateAPIView):
+    serializer_class = AddressCreateSerializer
+    queryset = Address.objects.all()
+    permission_classes = [AllowAny, ]
+
+    @swagger_auto_schema(tags=['Address'])
+    def put(self, request, *args, **kwargs):
+        pk = kwargs.get('pk', None)
+        address_obj = Address.objects.filter(pk=pk).update(**request.data)
+        return Response(data={'details': 'Address detail Updated'}, status=status.HTTP_200_OK)

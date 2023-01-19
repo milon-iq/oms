@@ -5,7 +5,8 @@ from .views import BrandCreateAPIView, BrandRetrieveAPIView, BrandListAPIView, B
     CategoryRetrieveAPIView, CategoryCreateAPIView, CategoryUpdateAPIView, ProductListAPIView, ProductCreateAPIView, \
     ProductRetrieveAPIView, ProductUpdateAPIView, CartListAPIView, CartCreateAPIView, CartRetrieveAPIView, \
     CartUpdateAPIView, OrderListAPIView, OrderRetrieveAPIView, OrderCreateAPIView, OrderUpdateAPIView, CouponListAPIView, \
-    CouponRetrieveAPIView, CouponCreateAPIView, CouponUpdateAPIView
+    CouponRetrieveAPIView, CouponCreateAPIView, CouponUpdateAPIView, AddressListAPIView, AddressRetrieveAPIView, \
+    AddressCreateAPIView, AddressUpdateAPIView
 urlpatterns = [
     path('brand/create/', BrandCreateAPIView.as_view(), name='brand_create'),
     path('brand/detail/<int:pk>/', BrandRetrieveAPIView.as_view(), name='brand_details'),
@@ -36,6 +37,11 @@ urlpatterns = [
     path('coupon/detail/<int:pk>/', CouponRetrieveAPIView.as_view(), name='coupon_details'),
     path('coupon/create/', CouponCreateAPIView.as_view(), name='coupon_create'),
     path('coupon/update/<int:pk>/', CouponUpdateAPIView.as_view(), name='coupon_update'),
+
+    path('address/list/all/', AddressListAPIView.as_view(), name='address_list'),
+    path('address/detail/<int:pk>/', AddressRetrieveAPIView.as_view(), name='detail_address'),
+    path('address/create/', AddressCreateAPIView.as_view(), name='create_address'),
+    path('address/update/<int:pk>/', AddressUpdateAPIView.as_view(), name='update_address'),
 
 
 ]

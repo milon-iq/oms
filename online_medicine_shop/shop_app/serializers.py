@@ -2,7 +2,7 @@ import json
 
 from rest_framework.serializers import ModelSerializer
 from rest_framework import serializers
-from .models import Category, Brand, Product, Coupon, Cart, Order
+from .models import Category, Brand, Product, Coupon, Cart, Order, Address
 from rest_framework.serializers import SerializerMethodField
 
 
@@ -143,4 +143,22 @@ class CouponDetailSerializer(ModelSerializer):
 class CouponListSerializer(ModelSerializer):
     class Meta:
         model = Coupon
+        exclude = ['created_at', 'updated_at']
+
+
+class AddressListSerializer(ModelSerializer):
+    class Meta:
+        model = Address
+        exclude = ['created_at', 'updated_at']
+
+
+class AddressRetrieveSerializer(ModelSerializer):
+    class Meta:
+        model = Address
+        exclude = ['created_at', 'updated_at']
+
+
+class AddressCreateSerializer(ModelSerializer):
+    class Meta:
+        model = Address
         exclude = ['created_at', 'updated_at']
