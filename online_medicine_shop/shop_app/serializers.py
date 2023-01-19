@@ -1,3 +1,5 @@
+import json
+
 from rest_framework.serializers import ModelSerializer
 from rest_framework import serializers
 from .models import Category, Brand, Product, Coupon, Cart, Order
@@ -111,12 +113,22 @@ class CartDetailAPIView(ModelSerializer):
 
 
 class OrderDetailSerializer(ModelSerializer):
+    products = SerializerMethodField()
+
+    def get_products(self, instance):
+        return json.loads(instance.products)
+
     class Meta:
         model = Order
         exclude = ['created_at', 'updated_at']
 
 
 class OrderListSerializer(ModelSerializer):
+    products = SerializerMethodField()
+
+    def get_products(self, instance):
+        return json.loads(instance.products)
+
     class Meta:
         model = Order
         exclude = ['created_at', 'updated_at']

@@ -1,9 +1,11 @@
+import json
+
 from django.shortcuts import render
 from django.http.response import HttpResponse
 from django.contrib.auth.models import User
 from .models import Brand, Category, Product, Cart, Coupon, Order
 from .serializers import BrandCreateSerializer, BrandListSerializer, CategoryListSerializer, CategoryDetailSerializer, \
-    CategoryCreateSerializer, ProductCreateSerializer, ProductListSerializer,ProductDetailSerializer, \
+    CategoryCreateSerializer, ProductCreateSerializer, ProductListSerializer, ProductDetailSerializer, \
     CartDetailSerializer, CartListSerializer, OrderDetailSerializer, OrderListSerializer, CouponListSerializer, \
     CouponDetailSerializer
 from rest_framework.generics import CreateAPIView, ListAPIView, UpdateAPIView, RetrieveAPIView
@@ -11,6 +13,8 @@ from rest_framework.response import Response
 from rest_framework import status
 from drf_yasg.utils import swagger_auto_schema
 from rest_framework.permissions import IsAuthenticated, AllowAny
+
+
 # Create your views here.
 
 
@@ -216,12 +220,13 @@ class CartCreateAPIView(CreateAPIView):
 
         return Response(data={'data': 'Products added to cart. '}, status=status.HTTP_201_CREATED)
 
+
 #
 # class CartCreateAPIView(CreateAPIView):
 #     serializer_class = CartDetailSerializer
 #     queryset = Cart.objects.all()
 #
-    # @swagger_auto_schema(tags=['Cart'])
+# @swagger_auto_schema(tags=['Cart'])
 #     def post(self, request, *ags, **kwargs):
 #         data = request.data
 #         user = User.objects.first()
@@ -265,11 +270,13 @@ class CartUpdateAPIView(UpdateAPIView):
 class OrderListAPIView(ListAPIView):
     serializer_class = OrderListSerializer
     queryset = Order.objects.all()
-    permission_classes = [IsAuthenticated, ]
+
+    # permission_classes = [IsAuthenticated, ]
 
     @swagger_auto_schema(tags=['Order'])
     def get(self, request, *args, **kwargs):
         queryset = Order.objects.all()
+
         serializer = OrderListSerializer(queryset, many=True)
         return Response(data=serializer.data, status=status.HTTP_200_OK)
 
@@ -297,16 +304,30 @@ class OrderCreateAPIView(CreateAPIView):
     @swagger_auto_schema(tags=['Order'])
     def post(self, request, *args, **kwargs):
         data = request.data
-        user_id = data.get('user_id', None)
-        quantity = data.get('quantity', None)
-        unit_price = data.get('unit_price', None)
-        total_price = data.get('total_price', None)
-
-        order_obj = Order(user_id_id=user_id, quantity=quantity, unit_price=unit_price,
-                          total_price=total_price)
+        user = User.objects.first()
+        total_price = 0
+        total_quantity = 0
+        list_of_product = []
+        for item in data["product"]:
+            product_id = item["product_id"]
+            product_name = item["product_name"]
+            quantity = item["quantity"]
+            unit_price = item["unit_price"]
+            total_quantity += quantity
+            total_price += quantity * unit_price
+            sample_dict = {
+                "product_id": product_id,
+                "product_name": product_name,
+                "quantity": product_name,
+                "unit_price": unit_price
+            }
+            list_of_product.append(sample_dict)
+        products_json = json.dumps(list_of_product)
+        final_quantity = total_quantity
+        final_price = total_price
+        order_obj = Order(user=user, total_quantity=final_quantity, total_price=final_price, products=products_json)
         order_obj.save()
-        serializer = OrderDetailSerializer(order_obj)
-        return Response(data=serializer.data, status=status.HTTP_201_CREATED)
+        return Response(data={'details': 'order created'}, status=status.HTTP_201_CREATED)
 
 
 class OrderUpdateAPIView(UpdateAPIView):

@@ -24,3 +24,8 @@ class BaseEnum(Enum):
 class DiscountType(BaseEnum):
     AMOUNT = 1
     PERCENTAGE = 2
+
+
+class AddressType(BaseEnum):
+    SHIPPING_ADDRESS = "shipping"
+    BILLING_ADDRESS = "billing"

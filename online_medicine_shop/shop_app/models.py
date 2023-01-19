@@ -1,6 +1,6 @@
 from django.db import models
 from systems.models import BaseModel
-from systems.enums import DiscountType
+from systems.enums import DiscountType, AddressType
 from django.contrib.auth.models import User
 
 
@@ -54,11 +54,25 @@ class Coupon(BaseModel):
         db_table = 'coupons'
 
 
+class Address(BaseModel):
+    address = models.CharField(max_length=500, help_text='address of the of user')
+    upazila = models.TextField(help_text=' Upazila name of the user')
+    district = models.TextField(help_text='District name of the user')
+    division = models.TextField(help_text='Division name of the user')
+    contact_no = models.IntegerField(help_text='user mobile number')
+    address_type = models.CharField(max_length=10, choices=AddressType.choices(), default=AddressType.SHIPPING_ADDRESS.
+                                    value)
+
+    class Meta:
+        db_table = 'addresses'
+
+
 class Order(BaseModel):
     user = models.ForeignKey(User, on_delete=models.CASCADE, help_text=' user id')
-    quantity = models.IntegerField(help_text='amount of products want to order')
-    unit_price = models.DecimalField(max_digits=10, decimal_places=2, help_text='product prices')
+    total_quantity = models.IntegerField(help_text='amount of products want to order')
     total_price = models.DecimalField(max_digits=10, decimal_places=2, help_text='total prices of products')
+    products = models.JSONField(null=True, blank=True)
 
     class Meta:
         db_table = 'orders'
+
