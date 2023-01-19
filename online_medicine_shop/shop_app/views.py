@@ -10,13 +10,14 @@ from rest_framework.generics import CreateAPIView, ListAPIView, UpdateAPIView, R
 from rest_framework.response import Response
 from rest_framework import status
 from drf_yasg.utils import swagger_auto_schema
-
+from rest_framework.permissions import IsAuthenticated, AllowAny
 # Create your views here.
 
 
 class BrandCreateAPIView(CreateAPIView):
     serializer_class = BrandCreateSerializer
     queryset = Brand.objects.all()
+    permission_classes = [AllowAny, ]
 
     @swagger_auto_schema(tags=['Brand'])
     def post(self, request, *args, **kwargs):
@@ -32,6 +33,7 @@ class BrandCreateAPIView(CreateAPIView):
 class BrandRetrieveAPIView(RetrieveAPIView):
     serializer_class = BrandListSerializer
     queryset = Brand.objects.all()
+    permission_classes = [AllowAny, ]
 
     @swagger_auto_schema(tags=['Brand'])
     def get(self, request, *args, **kwargs):
@@ -44,6 +46,7 @@ class BrandRetrieveAPIView(RetrieveAPIView):
 class BrandListAPIView(ListAPIView):
     serializer_class = BrandListSerializer
     queryset = Brand.objects.all()
+    permission_classes = [IsAuthenticated, ]
 
     @swagger_auto_schema(tags=['Brand'])
     def get(self, request, *args, **kwargs):
@@ -53,6 +56,7 @@ class BrandListAPIView(ListAPIView):
 
 
 class BrandUpdateAPIView(UpdateAPIView):
+    permission_classes = [AllowAny, ]
     serializer_class = BrandListSerializer
     queryset = Brand.objects.all()
 
@@ -66,6 +70,7 @@ class BrandUpdateAPIView(UpdateAPIView):
 
 
 class CategoryListAPIView(ListAPIView):
+    permission_classes = [IsAuthenticated, ]
     serializer_class = CategoryListSerializer
     queryset = Category.objects.all()
 
@@ -77,6 +82,7 @@ class CategoryListAPIView(ListAPIView):
 
 
 class CategoryRetrieveAPIView(RetrieveAPIView):
+    permission_classes = [AllowAny, ]
     serializer_class = CategoryDetailSerializer
     queryset = Category.objects.all()
 
@@ -89,6 +95,7 @@ class CategoryRetrieveAPIView(RetrieveAPIView):
 
 
 class CategoryCreateAPIView(CreateAPIView):
+    permission_classes = [AllowAny, ]
     serializer_class = CategoryCreateSerializer
     queryset = Category.objects.all()
 
@@ -103,6 +110,7 @@ class CategoryCreateAPIView(CreateAPIView):
 
 
 class CategoryUpdateAPIView(UpdateAPIView):
+    permission_classes = [AllowAny, ]
     serializer_class = CategoryDetailSerializer
     queryset = Category.objects.all()
 
@@ -114,6 +122,7 @@ class CategoryUpdateAPIView(UpdateAPIView):
 
 
 class ProductListAPIView(ListAPIView):
+    permission_classes = [AllowAny, ]
     serializer_class = ProductListSerializer
     queryset = Product.objects.all()
 
@@ -125,6 +134,7 @@ class ProductListAPIView(ListAPIView):
 
 
 class ProductCreateAPIView(CreateAPIView):
+    permission_classes = [AllowAny, ]
     serializer_class = ProductCreateSerializer
     queryset = Product.objects.all()
 
@@ -151,6 +161,7 @@ class ProductCreateAPIView(CreateAPIView):
 
 
 class ProductRetrieveAPIView(RetrieveAPIView):
+    permission_classes = [AllowAny, ]
     serializer_class = ProductDetailSerializer
     queryset = Product.objects.all()
 
@@ -163,6 +174,7 @@ class ProductRetrieveAPIView(RetrieveAPIView):
 
 
 class ProductUpdateAPIView(UpdateAPIView):
+    permission_classes = [AllowAny, ]
     serializer_class = ProductListSerializer
     queryset = Product.objects.all()
 
@@ -176,6 +188,7 @@ class ProductUpdateAPIView(UpdateAPIView):
 
 
 class CartListAPIView(ListAPIView):
+    permission_classes = [AllowAny, ]
     serializer_class = CartListSerializer
     queryset = Cart.objects.all()
 
@@ -187,6 +200,7 @@ class CartListAPIView(ListAPIView):
 
 
 class CartCreateAPIView(CreateAPIView):
+    permission_classes = [AllowAny, ]
     serializer_class = CartDetailSerializer
     queryset = Cart.objects.all()
 
@@ -223,6 +237,7 @@ class CartCreateAPIView(CreateAPIView):
 
 
 class CartRetrieveAPIView(RetrieveAPIView):
+    permission_classes = [AllowAny, ]
     serializer_class = CartDetailSerializer
     queryset = Cart.objects.all()
 
@@ -235,6 +250,7 @@ class CartRetrieveAPIView(RetrieveAPIView):
 
 
 class CartUpdateAPIView(UpdateAPIView):
+    permission_classes = [AllowAny, ]
     serializer_class = CartDetailSerializer
     queryset = Cart.objects.all()
 
@@ -249,6 +265,7 @@ class CartUpdateAPIView(UpdateAPIView):
 class OrderListAPIView(ListAPIView):
     serializer_class = OrderListSerializer
     queryset = Order.objects.all()
+    permission_classes = [IsAuthenticated, ]
 
     @swagger_auto_schema(tags=['Order'])
     def get(self, request, *args, **kwargs):
@@ -258,6 +275,7 @@ class OrderListAPIView(ListAPIView):
 
 
 class OrderRetrieveAPIView(RetrieveAPIView):
+    permission_classes = [AllowAny, ]
     serializer_class = OrderDetailSerializer
     queryset = Order.objects.all()
 
@@ -272,6 +290,7 @@ class OrderRetrieveAPIView(RetrieveAPIView):
 
 
 class OrderCreateAPIView(CreateAPIView):
+    permission_classes = [AllowAny, ]
     serializer_class = OrderDetailSerializer
     queryset = Order.objects.all()
 
@@ -291,6 +310,7 @@ class OrderCreateAPIView(CreateAPIView):
 
 
 class OrderUpdateAPIView(UpdateAPIView):
+    permission_classes = [AllowAny, ]
     serializer_class = OrderDetailSerializer
     queryset = Order.objects.all()
 
@@ -302,6 +322,7 @@ class OrderUpdateAPIView(UpdateAPIView):
 
 
 class CouponListAPIView(ListAPIView):
+    permission_classes = [AllowAny, ]
     serializer_class = CouponListSerializer
     queryset = Coupon.objects.all()
 
@@ -313,6 +334,7 @@ class CouponListAPIView(ListAPIView):
 
 
 class CouponRetrieveAPIView(RetrieveAPIView):
+    permission_classes = [AllowAny, ]
     serializer_class = CouponDetailSerializer
     queryset = Coupon.objects.all()
 
@@ -325,6 +347,7 @@ class CouponRetrieveAPIView(RetrieveAPIView):
 
 
 class CouponCreateAPIView(CreateAPIView):
+    permission_classes = [AllowAny, ]
     serializer_class = CouponDetailSerializer
     queryset = Coupon.objects.all()
 
@@ -345,6 +368,7 @@ class CouponCreateAPIView(CreateAPIView):
 
 
 class CouponUpdateAPIView(UpdateAPIView):
+    permission_classes = [AllowAny, ]
     serializer_class = CouponDetailSerializer
     queryset = Coupon.objects.all()
 
